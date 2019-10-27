@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import {loginOpt} from '../models/options'
 
 export default {
     name: 'login',
@@ -51,7 +52,13 @@ export default {
                 if (!valid) {
                     this.$message.error('校验失败')
                 } else {
-
+                    const {username, password} = this.loginForm
+                    const aa = {
+                        username,
+                        password
+                    }
+                    console.log(aa)
+                    loginOpt(aa)
                 }
             });
         },
