@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Message } from 'element-ui';
 import router from '@/router';
 import config from '../config/config'
 
@@ -20,12 +19,13 @@ const service = axios.create({
 
 const sucCode = 'S10000';
 const logoutCode = 'E99999';
+const failCode = 'E19999';
 
 // 请求拦截
 service.interceptors.request.use(
     (config) => {
-        if (localStorage.tsToken) {
-            config.headers.Authorization = localStorage.tsToken;
+        if (localStorage.fToken) {
+            config.headers.Authorization = localStorage.fToken;
         }
         return config;
     },
@@ -37,12 +37,20 @@ service.interceptors.request.use(
 // 响应拦截
 service.interceptors.response.use(
     (response) => {
-        console.log(response)
-        return response;
+        const {code, data:{data}, msg} = response.data
+        if (code === sucCode) {
+            return data
+        }else if (code === logoutCode) {
+            //todo 清除失效token 跳转登录页 弹出错误提醒
+            localStorage.removeItem('fToken')
+            router.push('/login')
+            return Promise.reject(msg);
+        }else if (code === failCode) {
+            return Promise.reject(msg);
+        }
     },
     (err) => {
-        Message.error('');
-        return Promise.reject('');
+        return Promise.reject(err);
     }
 );
 

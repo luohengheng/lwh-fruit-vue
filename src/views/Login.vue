@@ -48,17 +48,18 @@ export default {
     },
     methods: {
         submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
+            this.$refs[formName].validate(async (valid) => {
                 if (!valid) {
                     this.$message.error('校验失败')
                 } else {
                     const {username, password} = this.loginForm
-                    const aa = {
+                    const {token} = await loginOpt({
                         username,
                         password
-                    }
-                    console.log(aa)
-                    loginOpt(aa)
+                    })
+
+                    localStorage.setItem('fToken', token)
+                    this.$router.replace('/home')
                 }
             });
         },
