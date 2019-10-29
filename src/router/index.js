@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
-import Home from '../views/Home.vue'
+import DashBoard from '../views/dash-board/Index.vue'
 
 Vue.use(VueRouter)
 
@@ -12,9 +12,22 @@ const routes = [
       component: Login
     },
     {
-        path: '/home',
-        name: 'home',
-        component: Home
+        path: '/',
+        name: 'dashboard',
+        component: DashBoard,
+        redirect: '/fruitList',
+        children: [
+            {
+                path: '/fruitList',
+                name: 'fruitList',
+                component: _ => import('@/views/dash-board/FruitList.vue')
+            },
+            {
+                path: '/addFruit',
+                name: 'addFruit',
+                component: _ => import('@/views/dash-board/AddFruit.vue')
+            }
+        ]
     },
 ]
 
